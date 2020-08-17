@@ -1986,7 +1986,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "ChatComponent",
+  name: "Chat",
   props: {
     authUser: {
       type: Object,
@@ -2026,6 +2026,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               return _this.fetchMessages();
 
             case 7:
+              _context.next = 9;
+              return _this.removeMessages();
+
+            case 9:
             case "end":
               return _context.stop();
           }
@@ -2134,6 +2138,28 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             }
           }
         }, _callee5);
+      }))();
+    },
+    removeMessages: function removeMessages() {
+      var _this5 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                _context6.next = 2;
+                return _this5.messages.remove();
+
+              case 2:
+                _this5.messages = _context6.sent;
+
+              case 3:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6);
       }))();
     },
     sendMessage: function sendMessage() {
@@ -2351,17 +2377,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
-    return {
-      users: [{
-        name: "Solomon",
-        id: "1",
-        other: "2"
-      }, {
-        name: "Paul",
-        id: "2",
-        other: "1"
-      }]
-    };
+    return {};
+  },
+  computed: {
+    users: function users() {
+      return this.$store.state.users;
+    },
+    authUser: function authUser() {
+      return this.$store.state.user;
+    }
   }
 });
 
@@ -2397,6 +2421,20 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     Chat: _components_Chat__WEBPACK_IMPORTED_MODULE_1__["default"],
     Users: _components_Users__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  data: function data() {
+    return {
+      authUser: {
+        id: 1,
+        email: "solomoneseme@gmail.com",
+        name: "Solomon Eseme"
+      },
+      otherUser: {
+        id: 2,
+        email: "kaperskyguru@gmail.com",
+        name: "Kapersky Guru"
+      }
+    };
   }
 });
 
@@ -2413,7 +2451,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var vee_validate__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vee-validate */ "./node_modules/vee-validate/dist/vee-validate.esm.js");
+/* harmony import */ var vee_validate__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vee-validate */ "./node_modules/vee-validate/dist/vee-validate.esm.js");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -2498,8 +2536,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Login",
   components: {
-    ValidationProvider: vee_validate__WEBPACK_IMPORTED_MODULE_2__["ValidationProvider"],
-    ValidationObserver: vee_validate__WEBPACK_IMPORTED_MODULE_2__["ValidationObserver"]
+    ValidationProvider: vee_validate__WEBPACK_IMPORTED_MODULE_1__["ValidationProvider"],
+    ValidationObserver: vee_validate__WEBPACK_IMPORTED_MODULE_1__["ValidationObserver"]
   },
   data: function data() {
     return {
@@ -2732,7 +2770,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Users__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/Users */ "./resources/js/components/Users.vue");
-/* harmony import */ var _components_ChatComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/ChatComponent */ "./resources/js/components/ChatComponent.vue");
+/* harmony import */ var _components_Chat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Chat */ "./resources/js/components/Chat.vue");
 //
 //
 //
@@ -2760,8 +2798,11 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    Chat: _components_ChatComponent__WEBPACK_IMPORTED_MODULE_1__["default"],
+    Chat: _components_Chat__WEBPACK_IMPORTED_MODULE_1__["default"],
     Users: _components_Users__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  created: function created() {
+    this.$store.dispatch("getUsers");
   }
 });
 
@@ -42814,7 +42855,7 @@ var render = function() {
               attrs: {
                 to: {
                   name: "chat",
-                  params: { id: user.id + "-" + user.other }
+                  params: { id: _vm.authUser.id + "-" + user.id }
                 }
               }
             },
@@ -42855,7 +42896,11 @@ var render = function() {
       _c(
         "div",
         { staticClass: "col-md-9" },
-        [_c("Chat", { attrs: { authUser: 1, otherUser: 2 } })],
+        [
+          _c("Chat", {
+            attrs: { authUser: _vm.authUser, otherUser: _vm.otherUser }
+          })
+        ],
         1
       )
     ])
@@ -60156,7 +60201,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _routes_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./routes.js */ "./resources/js/routes.js");
 /* harmony import */ var _store_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./store.js */ "./resources/js/store.js");
 /* harmony import */ var _App_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./App.vue */ "./resources/js/App.vue");
-/* harmony import */ var _vee_validate__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./vee-validate */ "./resources/js/vee-validate.js");
+/* harmony import */ var _vee_validate__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./vee-validate */ "./resources/js/vee-validate.js");
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
@@ -60286,17 +60331,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Chat_vue_vue_type_template_id_0d66c37a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
-
-/***/ }),
-
-/***/ "./resources/js/components/ChatComponent.vue":
-/*!***************************************************!*\
-  !*** ./resources/js/components/ChatComponent.vue ***!
-  \***************************************************/
-/*! exports provided: default */
-/***/ (function(module, exports) {
-
-throw new Error("Module build failed (from ./node_modules/vue-loader/lib/index.js):\nError: ENOENT: no such file or directory, open '/home/kaperskyguru/Projects/PHPProjects/twilio-monitoring-conversation/resources/js/components/ChatComponent.vue'");
 
 /***/ }),
 
@@ -60556,47 +60590,93 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_3__);
 
- // import Repository from "./repositories/RepositoryFactory";
-// const EventRepository = Repository.get("events");
-// const AuthRepository = Repository.get("auth");
 
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
-var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
+
+
+var baseURL = "http://localhost:8000/api/v1";
+vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_2__["default"]);
+axios__WEBPACK_IMPORTED_MODULE_3___default.a.interceptors.request.use(function (config) {
+  var token = localStorage.getItem("token");
+
+  if (token) {
+    config.headers["Authorization"] = "Bearer ".concat(token);
+  }
+
+  return config;
+}, function (error) {
+  return Promise.reject(error);
+});
+var store = new vuex__WEBPACK_IMPORTED_MODULE_2__["default"].Store({
   state: {
-    events: [],
     user: [],
-    userevents: [],
-    loggedIn: false,
-    insights: []
+    users: [],
+    loggedIn: false
   },
-  actions: {// async getEvents({ commit }) {
-    //     commit("STORE_EVENTS", await EventRepository.get());
-    // },
-    // async getUserEvents({ commit }, id) {
-    //     commit(
-    //         "STORE_USER_EVENTS",
-    //         await EventRepository.getUserEvents(id)
-    //     );
-    // },
-    // async createEvent({ commit }, payload) {
-    //     commit("STORE_EVENT", await EventRepository.create(payload));
-    // },
-    // async updateEvent({ commit }, { payload, id }) {
-    //     commit("UPDATE_EVENT", await EventRepository.update(payload, id));
-    // },
-    // async deleteEvent({ commit }, id) {
-    //     const result = await EventRepository.delete(id);
-    //     if (result) {
-    //         commit("DELETE_EVENT", id);
-    //     }
-    // },
-    // async login({ commit }, payload) {
-    //     commit("STORE_LOGGED_IN_USER", await AuthRepository.login(payload));
-    // },
+  actions: {
+    login: function login(_ref, payload) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var commit;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                commit = _ref.commit;
+                payload.api_token = localStorage.getItem("api_token");
+                _context.t0 = commit;
+                _context.next = 5;
+                return axios__WEBPACK_IMPORTED_MODULE_3___default.a.post("".concat(baseURL, "/login"), payload);
+
+              case 5:
+                _context.t1 = _context.sent;
+                (0, _context.t0)("STORE_LOGGED_IN_USER", _context.t1);
+
+              case 7:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    getUsers: function getUsers(_ref2) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var commit, api_token, _yield$Axios$get, data;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                commit = _ref2.commit;
+                api_token = localStorage.getItem("api_token");
+                _context2.next = 4;
+                return axios__WEBPACK_IMPORTED_MODULE_3___default.a.get("".concat(baseURL, "/users?api_token=").concat(api_token));
+
+              case 4:
+                _yield$Axios$get = _context2.sent;
+                data = _yield$Axios$get.data;
+                commit("STORE_USERS", data.users);
+
+              case 7:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
     // async logout({ commit }) {
     //     try {
     //         await AuthRepository.logout();
@@ -60607,46 +60687,47 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     //     }
     //     return false;
     // },
-    // async register({ commit }, payload) {
-    //     return await AuthRepository.register(payload);
-    // }
+    register: function register(_ref3, payload) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+        var commit;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                commit = _ref3.commit;
+                _context3.next = 3;
+                return axios__WEBPACK_IMPORTED_MODULE_3___default.a.post("".concat(baseURL, "/register"), payload);
+
+              case 3:
+                return _context3.abrupt("return", _context3.sent);
+
+              case 4:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
+    }
   },
-  mutations: {// STORE_LOGGED_IN_USER: (state, response) => {
-    //     const { data } = response;
-    //     if (data) {
-    //         localStorage.setItem("token", data.access_token);
-    //         localStorage.setItem("user", data.user);
-    //         state.user = data.user;
-    //         state.token = data.access_token;
-    //         state.insights = data.insights;
-    //         state.loggedIn = true;
-    //     }
-    // },
-    // STORE_EVENTS: (state, response) => {
-    //     const { data } = response;
-    //     state.events = data;
-    // },
-    // STORE_EVENT: (state, response) => {
-    //     const { data } = response;
-    //     state.events.data.push(data.data);
-    // },
-    // UPDATE_EVENT: (state, response) => {
-    //     const { data } = response;
-    //     const index = state.events.data.findIndex(
-    //         event => event.id == data.data.id
-    //     );
-    //     state.events.data[index] = data.data;
-    // },
-    // DELETE_EVENT: (state, id) => {
-    //     const index = state.events.data.findIndex(event => event.id == id);
-    //     // remove item using index
-    //     state.events.data.splice(index, 1);
-    // },
-    // STORE_USER_EVENTS: (state, response) => {
-    //     const { data } = response;
-    //     state.userevents = data;
-    // },
-    // STORE_LOGGED_OUT_USER: (state, response) => {
+  mutations: {
+    STORE_LOGGED_IN_USER: function STORE_LOGGED_IN_USER(state, response) {
+      var data = response.data;
+
+      if (data) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", data.user);
+        localStorage.setItem("api_token", data.user.api_token);
+        state.user = data.user;
+        state.token = data.token;
+        state.loggedIn = true;
+      }
+    },
+    STORE_USERS: function STORE_USERS(state, users) {
+      if (users) {
+        state.users = users;
+      }
+    } // STORE_LOGGED_OUT_USER: (state, response) => {
     //     if (response) {
     //         localStorage.removeItem("token");
     //         localStorage.removeItem("user");
@@ -60656,15 +60737,9 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
     //         state.loggedIn = false;
     //     }
     // }
+
   },
   getters: {
-    getEvent: function getEvent(state) {
-      return function (id) {
-        return state.events.data.find(function (event) {
-          return event.id == id;
-        });
-      };
-    },
     isAdmin: function isAdmin(state) {
       return state.user.is_admin;
     },

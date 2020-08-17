@@ -21,7 +21,6 @@ class TokenController extends Controller
         $chatGrant = new ChatGrant();
         $chatGrant->setServiceSid(env('TWILIO_SERVICE_SID'));
         $token->addGrant($chatGrant);
-
         return response()->json([
                         'token' => $token->toJWT()
                 ]);

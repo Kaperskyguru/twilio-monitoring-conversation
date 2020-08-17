@@ -5,7 +5,7 @@
                 <Users />
             </div>
             <div class="col-md-9">
-                <Chat :authUser="1" :otherUser="2" />
+                <Chat :authUser="authUser" :otherUser="otherUser" />
             </div>
         </div>
     </div>
@@ -18,6 +18,20 @@ export default {
     components: {
         Chat,
         Users
+    },
+    data() {
+        return {
+            authUser: {
+                id: 1,
+                email: "solomoneseme@gmail.com",
+                name: "Solomon Eseme"
+            },
+            otherUser: {
+                id: 2,
+                email: "kaperskyguru@gmail.com",
+                name: "Kapersky Guru"
+            }
+        };
     }
 };
 </script>

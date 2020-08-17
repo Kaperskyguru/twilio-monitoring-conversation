@@ -9,7 +9,7 @@
                     :key="i"
                     :to="{
                         name: 'chat',
-                        params: { id: user.id + '-' + user.other }
+                        params: { id: authUser.id + '-' + user.id }
                     }"
                     class="list-group-item list-group-item-action"
                     >{{ user.name }}</router-link
@@ -22,20 +22,16 @@
 <script>
 export default {
     data() {
-        return {
-            users: [
-                {
-                    name: "Solomon",
-                    id: "1",
-                    other: "2"
-                },
-                {
-                    name: "Paul",
-                    id: "2",
-                    other: "1"
-                }
-            ]
-        };
+        return {};
+    },
+
+    computed: {
+        users() {
+            return this.$store.state.users;
+        },
+        authUser() {
+            return this.$store.state.user;
+        }
     }
 };
 </script>
