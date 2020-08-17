@@ -19,3 +19,17 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('/token', 'TokenController@generate');
+
+Route::group(['prefix' => 'v1'], function () {
+    Route::post('auth/login', "AuthController@login");
+    Route::post('auth/register', "AuthController@signup");
+    Route::get('events', "EventController@index");
+
+    Route::group(['middleware' => 'auth:api'], function () {
+        Route::post('auth/logout', "AuthController@logout");
+        Route::resource('events', "EventController")->except(['index']);
+        Route::get('users/{user}/events', "EventController@userEvents");
+        Route::post('events/{id}/ticket', "EventController@buy");
+        Route::post('events/{id}/join', "EventController@join");
+    });
+});
