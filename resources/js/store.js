@@ -1,46 +1,46 @@
 import Vue from "vue";
 import Vuex from "vuex";
-
-// import Repository from "./repositories/RepositoryFactory";
-// const EventRepository = Repository.get("events");
-// const AuthRepository = Repository.get("auth");
+import Axios from "axios";
+const baseURL = "http://localhost:8000/api/v1";
 
 Vue.use(Vuex);
 
+Axios.interceptors.request.use(
+    config => {
+        let token = localStorage.getItem("token");
+        if (token) {
+            config.headers["Authorization"] = `Bearer ${token}`;
+        }
+
+        return config;
+    },
+    error => {
+        return Promise.reject(error);
+    }
+);
+
 const store = new Vuex.Store({
     state: {
-        events: [],
         user: [],
-        userevents: [],
-        loggedIn: false,
-        insights: []
+        users: [],
+        loggedIn: false
     },
 
     actions: {
-        // async getEvents({ commit }) {
-        //     commit("STORE_EVENTS", await EventRepository.get());
-        // },
-        // async getUserEvents({ commit }, id) {
-        //     commit(
-        //         "STORE_USER_EVENTS",
-        //         await EventRepository.getUserEvents(id)
-        //     );
-        // },
-        // async createEvent({ commit }, payload) {
-        //     commit("STORE_EVENT", await EventRepository.create(payload));
-        // },
-        // async updateEvent({ commit }, { payload, id }) {
-        //     commit("UPDATE_EVENT", await EventRepository.update(payload, id));
-        // },
-        // async deleteEvent({ commit }, id) {
-        //     const result = await EventRepository.delete(id);
-        //     if (result) {
-        //         commit("DELETE_EVENT", id);
-        //     }
-        // },
-        // async login({ commit }, payload) {
-        //     commit("STORE_LOGGED_IN_USER", await AuthRepository.login(payload));
-        // },
+        async login({ commit }, payload) {
+            payload.api_token = localStorage.getItem("api_token");
+            commit(
+                "STORE_LOGGED_IN_USER",
+                await Axios.post(`${baseURL}/login`, payload)
+            );
+        },
+        async getUsers({ commit }) {
+            const api_token = localStorage.getItem("api_token");
+            const { data } = await Axios.get(
+                `${baseURL}/users?api_token=${api_token}`
+            );
+            commit("STORE_USERS", data.users);
+        },
         // async logout({ commit }) {
         //     try {
         //         await AuthRepository.logout();
@@ -51,47 +51,30 @@ const store = new Vuex.Store({
         //     }
         //     return false;
         // },
-        // async register({ commit }, payload) {
-        //     return await AuthRepository.register(payload);
-        // }
+        async register({ commit }, payload) {
+            return await Axios.post(`${baseURL}/register`, payload);
+        }
     },
 
     mutations: {
-        // STORE_LOGGED_IN_USER: (state, response) => {
-        //     const { data } = response;
-        //     if (data) {
-        //         localStorage.setItem("token", data.access_token);
-        //         localStorage.setItem("user", data.user);
-        //         state.user = data.user;
-        //         state.token = data.access_token;
-        //         state.insights = data.insights;
-        //         state.loggedIn = true;
-        //     }
-        // },
-        // STORE_EVENTS: (state, response) => {
-        //     const { data } = response;
-        //     state.events = data;
-        // },
-        // STORE_EVENT: (state, response) => {
-        //     const { data } = response;
-        //     state.events.data.push(data.data);
-        // },
-        // UPDATE_EVENT: (state, response) => {
-        //     const { data } = response;
-        //     const index = state.events.data.findIndex(
-        //         event => event.id == data.data.id
-        //     );
-        //     state.events.data[index] = data.data;
-        // },
-        // DELETE_EVENT: (state, id) => {
-        //     const index = state.events.data.findIndex(event => event.id == id);
-        //     // remove item using index
-        //     state.events.data.splice(index, 1);
-        // },
-        // STORE_USER_EVENTS: (state, response) => {
-        //     const { data } = response;
-        //     state.userevents = data;
-        // },
+        STORE_LOGGED_IN_USER: (state, response) => {
+            const { data } = response;
+            if (data) {
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("user", data.user);
+                localStorage.setItem("api_token", data.user.api_token);
+                state.user = data.user;
+                state.token = data.token;
+                state.loggedIn = true;
+            }
+        },
+
+        STORE_USERS: (state, users) => {
+            if (users) {
+                state.users = users;
+            }
+        }
+
         // STORE_LOGGED_OUT_USER: (state, response) => {
         //     if (response) {
         //         localStorage.removeItem("token");
@@ -105,10 +88,6 @@ const store = new Vuex.Store({
     },
 
     getters: {
-        getEvent: state => id => {
-            return state.events.data.find(event => event.id == id);
-        },
-
         isAdmin: state => {
             return state.user.is_admin;
         },

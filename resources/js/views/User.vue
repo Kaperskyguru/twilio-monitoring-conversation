@@ -23,11 +23,15 @@
 
 <script>
 import Users from "../components/Users";
-import Chat from "../components/ChatComponent";
+import Chat from "../components/Chat";
 export default {
     components: {
         Chat,
         Users
+    },
+
+    created() {
+        this.$store.dispatch("getUsers");
     }
 };
 </script>

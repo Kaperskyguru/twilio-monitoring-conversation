@@ -26,7 +26,7 @@
 
 <script>
 export default {
-    name: "ChatComponent",
+    name: "Chat",
     props: {
         authUser: {
             type: Object,
@@ -48,6 +48,7 @@ export default {
         const token = await this.fetchToken();
         await this.initializeClient(token);
         await this.fetchMessages();
+        await this.removeMessages();
     },
     methods: {
         async fetchToken() {
@@ -62,7 +63,6 @@ export default {
 
             client.on("tokenAboutToExpire", async () => {
                 const token = await this.fetchToken();
-
                 client.updateToken(token);
             });
 
@@ -77,6 +77,10 @@ export default {
 
         async fetchMessages() {
             this.messages = (await this.channel.getMessages()).items;
+        },
+
+        async removeMessages() {
+            this.messages = await this.messages.remove();
         },
 
         sendMessage() {
